@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * 
+ */
+class Recolte extends MY_Controller
+{
+	
+	function __construct()
+	{
+		parent::__construct();
+		$this->is_verify();
+	}
+
+	public function is_verify()
+	{
+		if (empty($this->session->userdata('memberid')))
+		{
+			redirect(base_url('Login/do_logout'));
+		}	
+	}
+
+
+	public function index()
+	{
+		$id=$this->session->userdata('memberid');
+		$id_niveau= $this->session->userdata('id_niveau');
+				$niveau=0;
+        if ($id_niveau==1) {
+          $niveau=1;
+        }elseif ($id_niveau==2) {
+          $niveau=2;
+        }elseif ($id_niveau==3) {
+          $niveau=3;
+        }elseif ($id_niveau==4) {
+          $niveau=4;
+        }elseif ($id_niveau==5) {
+          $niveau=5;
+        }
+		$data['gift']=$this->Model->readRequete("SELECT p.id_membre_donateur, m.nom_membre,m.prenom_membre,m.email_membre,m.tele_membre,m.id_mode_paiement as member_pay,m.photo_membre,p.id_mode_paiement as proof_pay,p.statut,p.image_proof,b.id_membre_beneficiaire,p.statut FROM membre m JOIN beneficiaire b ON  b.id_membre_donateur=m.id_membre LEFT JOIN proof_paiement p ON p.id_membre_donateur=m.id_membre  WHERE b.code_niveau=".$niveau." AND b.code_niveau=m.id_niveau AND b.id_water_source=".$id."") ;
+		$data['montant']=$this->Model->readOne('niveau',['id_niveau'=>$niveau]);
+		$data['compte_bancaire']=$this->Model->getValueSettings('compte_bancaire') ;
+		
+		
+		$this->load->view('Recolte_View',$data);
+	}
+}
+
+?>

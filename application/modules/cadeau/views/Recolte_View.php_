@@ -1,0 +1,463 @@
+<?php include VIEWPATH.'template/includes/header.php';?>
+
+<!-- Sidebar -->
+
+<?php include VIEWPATH.'template/includes/sidebar_menu.php';?>
+
+<!-- End Sidebar -->
+
+
+
+<div class="main-panel">
+
+ <div class="container">
+
+  <div class="panel-header bg-primary-gradient">
+
+   <div class="page-inner py-3">
+
+    <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+
+     <div>
+
+      <h2 class="text-white pb-2 fw-bold">
+
+     <?=lang('recolter')?>  
+
+      </h2>
+
+     </div>
+
+     <div class="ml-md-auto py-2 py-md-0">
+
+      <!-- PAGE-HEADER -->
+
+      <div class="page-header">
+
+       <ol class="breadcrumb">
+
+        <li class="breadcrumb-item">
+
+         <a href="#"><?=lang('acceuil')?></a>
+
+        </li>
+
+        <li class="breadcrumb-item">
+
+         <a href="#"><?=lang('membres')?></a>
+
+        </li>
+
+        <li class="breadcrumb-item active" aria-current="page">
+
+         <?=lang('recolter')?>
+
+        </li>
+
+       </ol>
+
+      </div>
+
+      <!-- PAGE-HEADER END -->
+
+     </div>
+
+    </div>
+
+   </div>
+
+  </div>
+
+
+
+
+
+      <div>
+
+          <?php if(!empty($this->session->flashdata('sms'))){   
+
+            echo $this->session->flashdata('sms'); } 
+
+         ?>
+
+      </div>
+
+
+
+
+
+  <div class="page-inner mt--5">
+
+
+
+   <div class="row row-cards">
+
+    <div class="col-lg-12 col-xl-12">
+
+     <div class="row">
+
+      <?php 
+        if (!empty($gift)) {
+        
+           foreach($gift as $value) {
+
+
+
+            if ($value['statut']==NULL) 
+
+            {
+
+               $statu=lang('echeance');
+
+         
+
+            }else{
+
+               if($value['statut']==1)
+
+               {
+
+                     $statu=lang('recu');
+
+                     
+
+               }elseif($value['statut']==0)
+
+               {
+
+                     $statu=lang('payable');
+
+                     
+
+               }
+
+            }
+
+            
+
+      ?>
+
+      <div class="col-lg-4 col-sm-12 p-l-0 p-r-0 col-md-12">
+
+       <div class="card">
+
+        <div class="card-header text-center success">
+
+         <h4 class="card-title">
+
+          
+
+          $ <?= $montant['cout_gift']?>.00 - <?=$statu?>
+
+         </h4>
+
+        </div>
+
+        <div class="card-body">
+
+         <?php
+        $img = '';
+
+        if (!empty($value['photo_membre'])) { 
+
+         $img=base_url('assets/photo/Profile/').$value['photo_membre'];
+         $nom=$value['nom_membre'];
+        }else{ 
+         $img=base_url('assets/photo/profile/profile.jpg');
+         $nom='No Image';
+        }  
+
+        ?>
+         <center>
+          <img class="media-object rounded-circle thumb-sm" alt="<?=$nom?>" src="<?= $img ?>" style="width: 65px; height: 65px">
+        </center>
+
+         <div class="text-center mt-3">
+
+          <h5>
+
+           <?= $value['nom_membre'].' '.$value['prenom_membre']?>
+
+          </h5>
+
+          <p class="mb-4">
+
+           <?= $value['email_membre']?><br>
+
+           <?= $value['tele_membre']?>
+
+          </p>
+          <div class="dropdown-divider"></div>
+        <u>
+          <b class="text-success text-center"><?=lang('beneficiaire')?></b>
+      </u>
+          <?php
+          $bene=$this->Model->readRequeteOne("SELECT m.id_membre,m.nom_membre,m.prenom_membre,m.email_membre,m.tele_membre FROM membre m WHERE m.id_membre=".$value['id_membre_beneficiaire']."") ;
+
+          ?>
+
+        <?php 
+            if (!empty($bene)) {
+                
+            
+        ?>
+          <h5>
+
+           <?= $bene['nom_membre'].' '.$bene['prenom_membre']?>
+
+          </h5>
+
+          <p class="mb-4">
+
+           <?= $bene['email_membre']?><br>
+
+           <?= $bene['tele_membre']?>
+
+          </p>
+<?php   
+    
+    }else{    ?>
+            <h5>
+
+            <?=lang('compte_bancaire')?>
+
+          </h5>
+
+          <p class="mb-4">
+
+          <?=lang('numero_compte')?> <br><?=$compte_bancaire ?><br>
+
+          </p>
+
+<?php } ?>
+          <div class="col p-1 mt-2">
+
+           <div class="float-left">
+
+            <div class="row">
+
+            <?php if($value['statut']!=NULL) { ?>
+
+                
+
+            <button type="button" class="btn btn-primary btn-sm d-block" data-toggle="modal" data-target="#TPVnvWwJu<?= $value['id_membre_donateur']?>"><?=lang('preuve')?></button>
+
+
+
+            <?php if($value['statut']==0) { ?>
+
+               <button type="button" class="btn btn-success btn-sm d-block" data-toggle="modal" data-target="#APPROUVE<?= $value['id_membre_donateur']?>" style="margin-left: 140px;"><?=lang('approuve')?></button>
+
+            <?php } ?>
+
+            <?php } ?>
+
+            </div>
+
+            
+
+
+
+           </div>
+
+          </div>
+
+         </div>
+
+        </div>
+
+       </div>
+
+      </div>
+
+      <div id="TPVnvWwJu<?= $value['id_membre_donateur']?>" class="modal fade">
+
+       <div class="modal-dialog modal-lg" role="document">
+
+        <div class="modal-content ">
+
+         <div class="modal-header pd-x-20">
+
+          <h6 class="modal-title"><?=lang('preuve_payement')?></h6>
+
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+
+           <span aria-hidden="true">&times;</span>
+
+          </button>
+
+         </div>
+
+         <div class="modal-body pd-20">
+
+          <center>
+
+           <p>
+
+            <h4>
+
+             <?=lang('cadeau_de')?><?=$value['prenom_membre']?>
+
+            </h4>
+
+           </p>
+
+           <hr>
+
+           <embed src="<?= base_url('assets/photo/proof_paiement/').$value['image_proof']?>" alt="Proof" alt="Preuve" width="100%" height="400px"/>
+
+           
+
+          </center>
+
+         </div>
+
+        </div>
+
+       </div>
+
+      </div>
+
+
+
+
+
+
+
+
+
+<!-- Modal -->
+
+<div class="modal fade" id="APPROUVE<?= $value['id_membre_donateur']?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+
+  <div class="modal-dialog" role="document">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+
+         <h4 class="modal-title text-success text-center"><?=lang('accuse_reception')?></h4>
+
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+        
+
+      </div>
+
+      
+
+         <form action="<?= base_url('cadeau/Graine/confirm_proof/')?>" method="post">
+
+            <div class="modal-body">
+
+           <?=lang('recu_cadeau_de')?><b class="text-success"><?=$value['prenom_membre']?> </b> ?
+
+            </div>
+
+           <div class="modal-footer">
+
+            <input type="hidden" name="id_membre_donateur" value="<?=$value['id_membre_donateur']?>">
+
+              <button type="button" class="btn btn-default" data-dismiss="modal"><?=lang('fermer')?></button>
+
+              <button type="submit" class="btn btn-primary"><?=lang('approuve')?></button>
+
+            </div>
+
+         </form>
+
+        
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+
+
+ <?php }    
+    
+    }else{  ?>
+
+<div class="container-fluid mt-4">
+    <div class="main-body">
+      <div class="card">
+        <div class="col-md-12">
+          <div class="card-body">
+            <div class="row">
+                 <div class="alert alert- col-md-12"><h6 class="text-center">Aucune donnée disponible dans la table ! </h6></div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+ <?php  } ?>
+
+
+
+
+
+     </div>
+
+    </div>
+
+   </div>
+
+
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- Footer -->   
+
+  <?php include VIEWPATH.'template/includes/footer.php';?>
+
+  <!-- End Footer -->   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

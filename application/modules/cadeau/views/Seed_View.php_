@@ -1,0 +1,318 @@
+<?php include VIEWPATH.'template/includes/header.php';?>
+<!-- Sidebar -->
+<?php include VIEWPATH.'template/includes/sidebar_menu.php';?>
+<!-- End Sidebar -->
+
+<div class="main-panel">
+ <div class="container">
+
+  <div class="panel-header bg-primary-gradient">
+   <div class="page-inner py-3">
+    <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+     <div>
+      <h2 class="text-white pb-2 fw-bold">
+       <?=lang('semence')?>
+      </h2>
+     </div>
+     <div class="ml-md-auto py-2 py-md-0">
+      <!-- PAGE-HEADER -->
+      <div class="page-header">
+       <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+         <a href="#"> <?=lang('acceuil')?></a>
+        </li>
+        <li class="breadcrumb-item">
+         <a href="#"><?=lang('semence')?></a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+         <?=lang('list')?>
+        </li>
+       </ol>
+      </div>
+      <!-- PAGE-HEADER END -->
+     </div>
+    </div>
+   </div>
+  </div>
+
+
+
+      <div>
+          <?php if(!empty($this->session->flashdata('sms'))){   
+            echo $this->session->flashdata('sms'); } 
+         ?>
+      </div>
+
+  <div class="page-inner mt--5">
+
+
+   <div class="row row-cards">
+    <div class="col-lg-12 col-xl-12">
+     <div class="row">
+      <div class="col-lg-4 col-sm-12 p-l-0 p-r-0 col-md-12">
+       <div class="card">
+        <div class="card-header text-center success">
+         <h2 class="card-title">
+            <?php 
+            if (!empty($water_beneficiaire)) {
+             
+       
+      if ($water_beneficiaire['statut']==NULL) 
+            {
+               $statu=lang('echeance'); 
+               $buton=lang('telecharger_preuve');
+               $idmodal="#DQX4567HN_1A";
+            }else{
+               if($water_beneficiaire['statut']==1)
+               {
+                     $statu=lang('recu');
+                     $buton=lang('preuve');
+                     $idmodal="#DQX4567HN_2";
+               }elseif($water_beneficiaire['statut']==0)
+               {
+                     $statu="PAYABLE";
+                     $buton=lang('preuve');
+                     $idmodal="#DQX4567HN_2";
+               }
+            } 
+
+            }else{
+
+               $statu=lang('echeance'); 
+               $buton=lang('telecharger_preuve');
+               $idmodal="#DQX4567HN_1A";
+            }  
+                      
+            
+      ?>
+          $ <?= $montant['cout_gift']?>.00 - <?=$statu?>
+         </h2>
+        </div>
+        <div class="card-body">
+       <?php
+        $img = '';
+
+        if (!empty($water_beneficiaire['photo_membre'])) { 
+
+         $img=base_url('assets/photo/Profile/').$water_beneficiaire['photo_membre'];
+         $nom=$water_beneficiaire['nom_membre'];
+        }else{ 
+         $img=base_url('assets/photo/profile/profile.jpg');
+         $nom='No Image';
+        }  
+
+        ?>
+         <center>
+          <img class="media-object rounded-circle thumb-sm" alt="<?=$nom?>" src="<?= $img ?>" style="width: 65px; height: 65px">
+        </center>
+         <div class="text-center mt-3">
+           <?php 
+
+            if (!empty($water_beneficiaire)) {
+
+           if ($water_beneficiaire['id_membre_donateur']>7) {
+            ?>
+            <h5>
+           
+           <?= $water_beneficiaire['nom_membre'].' '.$water_beneficiaire['prenom_membre']?>
+          </h5>
+          <p class="mb-4">
+           <?= $water_beneficiaire['email_membre']?><br>
+           <?= $water_beneficiaire['tele_membre']?>
+          </p>
+       <?php }else{ ?>
+          <h5>
+           
+           <?=lang('compte_bancaire')?>
+          </h5>
+          <p class="mb-4">
+         <?=lang('numero_compte')?>: <?=$compte_bancaire ?><br>
+           
+          </p>
+       <?php } 
+
+            }else{  ?>
+
+                <h5>
+           
+           <?=lang('compte_bancaire')?>
+          </h5>
+          <p class="mb-4">
+         <?=lang('numero_compte')?>: <?=$compte_bancaire ?><br>
+           
+          </p>
+
+       <?php     }
+
+            ?>
+
+         </div>
+        </div>
+        <div class="card-footer">
+         <div class="col p-1 mt-2">
+          <center><div>
+           <button type="button" class="btn btn-primary btn-sm d-block" data-toggle="modal" data-target="<?=$idmodal?>"><?=$buton?></button>
+          </div></center>
+          <!-- <div class="float-right">
+           <button type="button" class="btn btn-info btn-sm d-block" data-toggle="modal" data-target="#DQX4567HN">ACCOUNT</button>
+          </div> -->
+         </div>
+        </div>
+       </div>
+      </div>
+
+
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+
+</div>
+
+
+<!-- Footer -->	
+<?php include VIEWPATH.'template/includes/footer.php';?>
+<!-- End Footer -->	
+
+
+
+
+<div id="DQX4567HN_2" class="modal fade">
+ <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-content ">
+   <div class="modal-header pd-x-20">
+    <h6 class="modal-title"><?=lang('preuve_payement')?></h6>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+     <span aria-hidden="true">&times;</span>
+    </button>
+   </div>
+   <div class="modal-body pd-20" >
+    <center>
+     <embed  src="<?= base_url('assets/photo/proof_paiement/').$water_beneficiaire['image_proof']?>" alt="Preuve" width="100%" height="400px"/>
+     
+    </center>
+   </div>
+  </div>
+ </div>
+</div>
+
+
+
+
+<div id="DQX4567HN_1A" class="modal fade">
+ <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-content ">
+   <div class="modal-header pd-x-20">
+    <h6 class="modal-title"><?=lang('preuve_payement')?></h6>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+     <span aria-hidden="true">&times;</span>
+    </button>
+   </div>
+   <div class="modal-body pd-20">
+    <form method="post" action="<?= base_url('cadeau/Graine/upload_proof')?>" enctype="multipart/form-data">
+     <div class="form-group">
+      <label class="form-label"><?=lang('paiement_cadeau')?></label>
+      <select name="preferred" class="form-control" required>
+       <option value="" selected><?=lang('choisir_option')?></option>
+       <?php  foreach ($mode_paiement as $key) { ?>
+        <option value="<?=$key['id_mode_paiement']?>" ><?=$key['description_mode']?></option>
+
+      <?php  } ?>
+      </select>
+     </div>
+     <div class="form-group">
+      <label class="form-label"><?=lang('detail_cadeau')?></label>
+      <textarea class="form-control" name="details" required rows="3"></textarea>
+     </div>
+     <div class="form-group">
+      <label class="form-label"><?=lang('preuve_payement')?></label>
+      <input type="file" class="form-control" required name="proof">
+     </div>
+
+     <div class="form-footer">
+      <button type="submit" class="btn btn-primary btn-block"><?=lang('enregistrer')?></button>
+     </div>
+    </form>
+   </div>
+  </div>
+ </div>
+</div>
+
+
+
+
+
+<div id="DQX4567HN" class="modal fade">
+ <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-content ">
+   <div class="modal-header pd-x-20">
+    <h6 class="modal-title"><?=lang('gift_option')?></h6>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+     <span aria-hidden="true">&times;</span>
+    </button>
+   </div>
+   <div class="modal-body pd-20">
+    <h4><?=lang('prefere')?></h4>
+    <div class="table-responsive">
+     <table class="table card-table table-vcenter text-nowrap  align-items-center">
+      <thead class="thead-light">
+       <tr>
+        <th colspan="2"><?=lang('gift_option')?></th>
+        <th colspan="2"><?=lang('acount_info')?></th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr>
+        <td style="width: 75px">
+         <img src="https://7genetwork.com/app/assets/cashapp.png" alt="CashApp" style="width: auto; height: 32px">
+        </td>
+        <td style="width: 90px">
+         CashApp
+        </td>
+        <td>
+         <div id="DQX4567HN_ASGARD">
+         </td>
+         <td>
+          <button class="btn btn-warning" style="float: right" >
+           COPY
+          </button>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+
+
+     <hr>
+     <h4><?=lang('other')?></h4>
+     <div class="table-responsive">
+      <table class="table card-table table-vcenter text-nowrap  align-items-center">
+       <thead class="thead-light">
+        <tr>
+         <th colspan="2"><?=lang('gift_option')?></th>
+         <th colspan="2"><?=lang('acount_info')?></th>
+        </tr>
+       </thead>
+       <tbody>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="modal-footer text-left pd-20">
+     <p style="font-size: 11px">*If you wish to gift using a different method other than the type stated above, you can contact the recipient using either of his/her social links.</p>
+     <br>
+
+     <div class="flex-c-m " style="float: right">
+      <a href="https://api.whatsapp.com/send?phone=+" target="_blank" class="login100-social-item bg1">
+       <i class="fa fa-whatsapp"></i>
+      </a>
+      <a href="#" target="_blank" class="login100-social-item bg2">
+       <i class="fa fa-skype"></i>
+      </a>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
